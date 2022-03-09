@@ -1,1 +1,0 @@
-# trigen_react
