@@ -7,18 +7,18 @@ export default class index extends PureComponent {
   //   }
 
   componentDidMount() {
-    document.addEventListener('mousemove', this.mouseMove);
-    this.interval = setInterval(() => {
-      console.log('interval');
-    }, 1000);
+    // document.addEventListener('mousemove', this.mouseMove);
+    // this.interval = setInterval(() => {
+    //   console.log('interval');
+    // }, 1000);
   }
 
   componentWillUnmount() {
-    document.removeEventListener(
-      'mousemove',
-      this.mouseMove,
-    );
-    clearInterval(this.interval);
+    // document.removeEventListener(
+    //   'mousemove',
+    //   this.mouseMove,
+    // );
+    // clearInterval(this.interval);
   }
 
   mouseMove = () => {
@@ -28,11 +28,11 @@ export default class index extends PureComponent {
   render() {
     console.log('Child 1 Component');
     const { a } = this.props;
-    if (a >= 20) {
-      throw new Error(
-        'Value should not be greater then 20',
-      );
-    }
+    // if (a >= 20) {
+    //   throw new Error(
+    //     'Value should not be greater then 20',
+    //   );
+    // }
     return (
       <div>
         Child 1 Component
