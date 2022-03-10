@@ -1,3 +1,9 @@
-export const lastName = 'Modh';
+import React, { Component } from 'react';
 
-export const age = 30;
+export class App extends Component {
+  render() {
+    return <div>App</div>;
+  }
+}
+
+export default App;
