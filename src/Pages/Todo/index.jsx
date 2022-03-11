@@ -1,4 +1,5 @@
 import React, { Component, createRef } from 'react';
+import './style.css';
 
 export class Todo extends Component {
   constructor(props) {
@@ -9,41 +10,66 @@ export class Todo extends Component {
     this.todoText = createRef();
   }
 
-  handleAddTodo = () => {
+  handleAddTodo = event => {
+    event.preventDefault();
+    this.setState(
+      ({ todoList }) => ({
+        todoList: [
+          ...todoList,
+          {
+            id: new Date().valueOf(),
+            text: this.todoText.current.value,
+            isComplete: false,
+          },
+        ],
+      }),
+      () => {
+        this.todoText.current.value = '';
+      },
+    );
+  };
+
+  toggleComplete = item => {
     this.setState(({ todoList }) => ({
-      todoList: [
-        ...todoList,
-        {
-          id: new Date().valueOf(),
-          text: this.todoText.current.value,
-        },
-      ],
+      todoList: todoList.map(value => {
+        if (value.id === item.id) {
+          return {
+            ...value,
+            isComplete: !value.isComplete,
+          };
+        }
+        return value;
+      }),
     }));
   };
 
   render() {
-    console.log('todo render');
     const { todoList } = this.state;
     return (
-      <div>
+      <div className="container">
         <h1>Todo App</h1>
-        <div>
+        <form onSubmit={this.handleAddTodo}>
           <input
             type="text"
             name="txtTodo"
             ref={this.todoText}
           />
-          <button
-            type="button"
-            onClick={this.handleAddTodo}>
-            Add Todo
-          </button>
-        </div>
-        <ul>
+          <button type="submit">Add Todo</button>
+        </form>
+        <div className="todoList-wrapper">
           {todoList.map(item => (
-            <li key={item.id}>{item.text}</li>
+            <div key={item.id} className="todoItem-wrapper">
+              <input
+                type="checkbox"
+                name="toggleComplete"
+                checked={item.isComplete}
+                onChange={() => this.toggleComplete(item)}
+              />
+              <span>{item.text}</span>
+              <button type="button">Delete</button>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
