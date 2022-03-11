@@ -3,11 +3,11 @@
   padding: 0;
 }
 
-div#root {
+/* div#root {
   max-width: 1258px;
   width: 100%;
   margin: 0 auto;
-}
+} */
 
 .container {
   height: 100vh;
@@ -23,6 +23,8 @@ div#root {
 
 .container .todoList-wrapper {
   width: 100%;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .container .todoItem-wrapper {
@@ -34,4 +36,13 @@ div#root {
 .container .todoItem-wrapper > span {
   flex: 1;
   padding: 0 1rem;
+}
+
+.container .filter-wrapper {
+  width: 100%;
+  display: flex;
+}
+
+.container .filter-wrapper > button {
+  flex: 1;
 }
