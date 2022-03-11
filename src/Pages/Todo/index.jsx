@@ -60,34 +60,59 @@ export class Todo extends Component {
     } catch (error) {}
   };
 
-  toggleComplete = item => {
-    this.setState(({ todoList }) => {
-      const index = todoList.findIndex(
-        x => x.id === item.id,
-      );
-      return {
-        todoList: [
-          ...todoList.slice(0, index),
-          {
-            ...todoList[index],
-            isComplete: !todoList[index].isComplete,
+  toggleComplete = async item => {
+    try {
+      const res = await fetch(
+        `http://localhost:3004/todoList/${item.id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            ...item,
+            isComplete: !item.isComplete,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
           },
-          ...todoList.slice(index + 1),
-        ],
-      };
-    });
+        },
+      );
+
+      const json = await res.json();
+
+      this.setState(({ todoList }) => {
+        const index = todoList.findIndex(
+          x => x.id === item.id,
+        );
+        return {
+          todoList: [
+            ...todoList.slice(0, index),
+            json,
+            ...todoList.slice(index + 1),
+          ],
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  handleDelete = id => {
-    this.setState(({ todoList }) => {
-      const index = todoList.findIndex(x => x.id === id);
-      return {
-        todoList: [
-          ...todoList.slice(0, index),
-          ...todoList.slice(index + 1),
-        ],
-      };
-    });
+  handleDelete = async id => {
+    try {
+      await fetch(`http://localhost:3004/todoList/${id}`, {
+        method: 'DELETE',
+      });
+      this.setState(({ todoList }) => {
+        const index = todoList.findIndex(x => x.id === id);
+        return {
+          todoList: [
+            ...todoList.slice(0, index),
+            ...todoList.slice(index + 1),
+          ],
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   handleFilter = filterType => {

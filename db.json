@@ -1,11 +1,6 @@
 {
   "todoList": [
     {
-      "text": "Get milk",
-      "isComplete": false,
-      "id": 1
-    },
-    {
       "text": "learn react",
       "isComplete": false,
       "id": 2
