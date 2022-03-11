@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
 import './style.css';
+import TodoFilter from './todoFilter';
 import TodoForm from './todoForm';
 import TodoList from './todoList';
 
@@ -81,23 +82,7 @@ export class Todo extends Component {
           toggleComplete={this.toggleComplete}
           handleDelete={this.handleDelete}
         />
-        <div className="filter-wrapper">
-          <button
-            type="button"
-            onClick={() => this.handleFilter('all')}>
-            All
-          </button>
-          <button
-            type="button"
-            onClick={() => this.handleFilter('pending')}>
-            Pending
-          </button>
-          <button
-            type="button"
-            onClick={() => this.handleFilter('completed')}>
-            Completed
-          </button>
-        </div>
+        <TodoFilter handleFilter={this.handleFilter} />
       </div>
     );
   }
