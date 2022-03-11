@@ -1,5 +1,7 @@
 import React, { Component, createRef } from 'react';
 import './style.css';
+import TodoForm from './todoForm';
+import TodoList from './todoList';
 
 export class Todo extends Component {
   constructor(props) {
@@ -69,54 +71,16 @@ export class Todo extends Component {
     return (
       <div className="container">
         <h1>Todo App</h1>
-        <form onSubmit={this.handleAddTodo}>
-          <input
-            type="text"
-            name="txtTodo"
-            ref={this.todoText}
-          />
-          <button type="submit">Add Todo</button>
-        </form>
-        <div className="todoList-wrapper">
-          {todoList
-            .filter(x => {
-              switch (filterType) {
-                case 'completed':
-                  return x.isComplete;
-                case 'pending':
-                  return !x.isComplete;
-                default:
-                  return true;
-              }
-            })
-            .map(item => (
-              <div
-                key={item.id}
-                className="todoItem-wrapper">
-                <input
-                  type="checkbox"
-                  name="toggleComplete"
-                  checked={item.isComplete}
-                  onChange={() => this.toggleComplete(item)}
-                />
-                <span
-                  style={{
-                    textDecoration: item.isComplete
-                      ? 'line-through'
-                      : 'none',
-                  }}>
-                  {item.text}
-                </span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    this.handleDelete(item.id)
-                  }>
-                  Delete
-                </button>
-              </div>
-            ))}
-        </div>
+        <TodoForm
+          handleAddTodo={this.handleAddTodo}
+          ref={this.todoText}
+        />
+        <TodoList
+          todoList={todoList}
+          filterType={filterType}
+          toggleComplete={this.toggleComplete}
+          handleDelete={this.handleDelete}
+        />
         <div className="filter-wrapper">
           <button
             type="button"
