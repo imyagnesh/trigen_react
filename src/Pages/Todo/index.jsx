@@ -14,23 +14,50 @@ export class Todo extends Component {
     this.todoText = createRef();
   }
 
-  handleAddTodo = event => {
-    event.preventDefault();
-    this.setState(
-      ({ todoList }) => ({
-        todoList: [
-          ...todoList,
-          {
-            id: new Date().valueOf(),
+  async componentDidMount() {
+    try {
+      const res = await fetch(
+        'http://localhost:3004/todoList',
+      );
+      const json = await res.json();
+      this.setState({
+        todoList: json,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  handleAddTodo = async event => {
+    try {
+      event.preventDefault();
+
+      const res = await fetch(
+        'http://localhost:3004/todoList',
+        {
+          method: 'POST',
+          body: JSON.stringify({
             text: this.todoText.current.value,
             isComplete: false,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
           },
-        ],
-      }),
-      () => {
-        this.todoText.current.value = '';
-      },
-    );
+        },
+      );
+
+      const json = await res.json();
+
+      this.setState(
+        ({ todoList }) => ({
+          todoList: [...todoList, json],
+        }),
+        () => {
+          this.todoText.current.value = '';
+        },
+      );
+    } catch (error) {}
   };
 
   toggleComplete = item => {
