@@ -1,11 +1,10 @@
 import React, {
-  PureComponent,
-  createRef,
   useState,
   useEffect,
   useRef,
+  useCallback,
+  useMemo,
 } from 'react';
-import Child1 from './Child1';
 import './style.css';
 import TodoFilter from './todoFilter';
 import TodoForm from './todoForm';
@@ -25,27 +24,30 @@ const Todo = () => {
   const [hasError, setHasError] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const inputRef = useRef();
+  // Use callback & useMemo  use for memorization so it will not create a new instance on prop or state change
+  // useCallback is use for function memorization
+  // useMemo is use for non-primitive variables
 
-  // component Did Mount
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setIsLoading(true);
-        const res = await fetch(
-          'http://localhost:3004/todoList?_sort=id&_order=desc',
-        );
-        const json = await res.json();
-        setTodoList(json);
-        setIsLoading(false);
-      } catch (error) {
-        setHasError(error);
-        setIsLoading(false);
+  const loadData = useCallback(async ft => {
+    try {
+      setIsLoading(true);
+      let url =
+        'http://localhost:3004/todoList?_sort=id&_order=desc';
+      if (ft !== 'all') {
+        url = `${url}&isComplete=${ft === 'completed'}`;
       }
-    };
-    loadData();
+      const res = await fetch(url);
+      const json = await res.json();
+      setTodoList(json);
+      setFilterType(ft);
+      setIsLoading(false);
+    } catch (error) {
+      setHasError(error);
+      setIsLoading(false);
+    }
   }, []);
 
-  const handleAddTodo = async event => {
+  const handleAddTodo = useCallback(async event => {
     try {
       setIsLoading(true);
       event.preventDefault();
@@ -72,16 +74,83 @@ const Todo = () => {
       setHasError(error);
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const toggleComplete = () => {};
+  const toggleComplete = useCallback(async item => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `http://localhost:3004/todoList/${item.id}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify({
+            ...item,
+            isComplete: !item.isComplete,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      );
 
-  const handleDelete = () => {};
+      const json = await res.json();
+      setTodoList(prevState => {
+        const index = prevState.findIndex(
+          x => x.id === item.id,
+        );
+        return [
+          ...prevState.slice(0, index),
+          json,
+          ...prevState.slice(index + 1),
+        ];
+      });
+      setIsLoading(false);
+    } catch (error) {
+      setHasError(error);
+      setIsLoading(false);
+    }
+  }, []);
 
-  const handleFilter = () => {};
+  const handleDelete = useCallback(async id => {
+    try {
+      setIsLoading(true);
+      await fetch(`http://localhost:3004/todoList/${id}`, {
+        method: 'DELETE',
+      });
+      setTodoList(prevState => {
+        const index = prevState.findIndex(x => x.id === id);
+        return [
+          ...prevState.slice(0, index),
+          ...prevState.slice(index + 1),
+        ];
+      });
+      setIsLoading(false);
+    } catch (error) {
+      setHasError(error);
+      setIsLoading(false);
+    }
+  }, []);
+
+  // non-premitive type of data
+  const title = useMemo(() => ({ name: 'yagnesh' }), []);
+
+  // component Did Mount
+  useEffect(() => {
+    loadData('all');
+  }, []);
+
+  if (hasError) {
+    return <h1>{hasError.message}</h1>;
+  }
 
   return (
     <div className="container">
+      {isLoading && (
+        <div className="loader-wrapper">
+          <div className="loader">Loading...</div>
+        </div>
+      )}
       <h1>Todo App</h1>
       <TodoForm
         ref={inputRef}
@@ -93,7 +162,7 @@ const Todo = () => {
         handleDelete={handleDelete}
       />
       <TodoFilter
-        handleFilter={handleFilter}
+        handleFilter={loadData}
         filterType={filterType}
       />
     </div>
