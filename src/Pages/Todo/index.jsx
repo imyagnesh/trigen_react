@@ -3,7 +3,7 @@ import React, {
   useEffect,
   useRef,
   useCallback,
-  useMemo,
+  // useMemo,
 } from 'react';
 import {
   todoAppInitialValues,
@@ -113,27 +113,25 @@ const Todo = () => {
   }, []);
 
   const handleDelete = useCallback(async id => {
-    // try {
-    //   setIsLoading(true);
-    //   await fetch(`http://localhost:3004/todoList/${id}`, {
-    //     method: 'DELETE',
-    //   });
-    //   setTodoList(prevState => {
-    //     const index = prevState.findIndex(x => x.id === id);
-    //     return [
-    //       ...prevState.slice(0, index),
-    //       ...prevState.slice(index + 1),
-    //     ];
-    //   });
-    //   setIsLoading(false);
-    // } catch (error) {
-    //   setHasError(error);
-    //   setIsLoading(false);
-    // }
+    try {
+      dispatch({ type: 'DELETE_TODO_REQUEST' });
+      await fetch(`http://localhost:3004/todoList/${id}`, {
+        method: 'DELETE',
+      });
+      dispatch({
+        type: 'DELETE_TODO_SUCCESS',
+        payload: id,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'DELETE_TODO_FAIL',
+        payload: error,
+      });
+    }
   }, []);
 
   // non-premitive type of data
-  const title = useMemo(() => ({ name: 'yagnesh' }), []);
+  // const title = useMemo(() => ({ name: 'yagnesh' }), []);
 
   // component Did Mount
   useEffect(() => {
