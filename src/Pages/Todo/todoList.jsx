@@ -6,21 +6,18 @@ const TodoList = ({
   todoList,
   toggleComplete,
   handleDelete,
-}) => {
-  console.log('todo list');
-  return (
-    <div className="todoList-wrapper">
-      {todoList.map(item => (
-        <TodoItem
-          key={item.id}
-          item={item}
-          toggleComplete={toggleComplete}
-          handleDelete={handleDelete}
-        />
-      ))}
-    </div>
-  );
-};
+}) => (
+  <div className="todoList-wrapper">
+    {todoList.map(item => (
+      <TodoItem
+        key={item.id}
+        item={item}
+        toggleComplete={toggleComplete}
+        handleDelete={handleDelete}
+      />
+    ))}
+  </div>
+);
 
 TodoList.propTypes = {
   todoList: PropTypes.arrayOf(

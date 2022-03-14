@@ -12,8 +12,18 @@
     },
     {
       "text": "dsfasdf",
-      "isComplete": false,
+      "isComplete": true,
       "id": 8
+    },
+    {
+      "text": "new record",
+      "isComplete": true,
+      "id": 9
+    },
+    {
+      "text": "new record 1",
+      "isComplete": true,
+      "id": 10
     }
   ]
 }
