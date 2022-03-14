@@ -1,31 +1,35 @@
-import React, { Component, createRef } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import './style.css';
 import TodoFilter from './todoFilter';
 import TodoForm from './todoForm';
 import TodoList from './todoList';
 
-export class Todo extends Component {
+export class Todo extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       todoList: [],
+      isLoading: false,
       filterType: 'all',
+      hasError: false,
     };
     this.todoText = createRef();
   }
 
   async componentDidMount() {
-    this.loadTodo();
+    this.loadTodo('all');
   }
 
   loadTodo = async filterType => {
     try {
-      let url = 'http://localhost:3004/todoList';
+      this.setState({ isLoading: true });
+      let url =
+        'http://localhost:3004/todoList?_sort=id&_order=desc';
       if (
         filterType === undefined ||
         filterType !== 'all'
       ) {
-        url = `${url}?isComplete=${
+        url = `${url}&isComplete=${
           filterType === 'completed'
         }`;
       }
@@ -34,14 +38,19 @@ export class Todo extends Component {
       this.setState({
         todoList: json,
         filterType,
+        isLoading: false,
       });
     } catch (error) {
-      console.log(error);
+      this.setState({
+        hasError: error,
+        isLoading: false,
+      });
     }
   };
 
   handleAddTodo = async event => {
     try {
+      this.setState({ isLoading: true });
       event.preventDefault();
 
       const res = await fetch(
@@ -63,17 +72,24 @@ export class Todo extends Component {
 
       this.setState(
         ({ todoList }) => ({
-          todoList: [...todoList, json],
+          todoList: [json, ...todoList],
+          isLoading: false,
         }),
         () => {
           this.todoText.current.value = '';
         },
       );
-    } catch (error) {}
+    } catch (error) {
+      this.setState({
+        hasError: error,
+        isLoading: false,
+      });
+    }
   };
 
   toggleComplete = async item => {
     try {
+      this.setState({ isLoading: true });
       const res = await fetch(
         `http://localhost:3004/todoList/${item.id}`,
         {
@@ -101,15 +117,20 @@ export class Todo extends Component {
             json,
             ...todoList.slice(index + 1),
           ],
+          isLoading: false,
         };
       });
     } catch (error) {
-      console.log(error);
+      this.setState({
+        hasError: error,
+        isLoading: false,
+      });
     }
   };
 
   handleDelete = async id => {
     try {
+      this.setState({ isLoading: true });
       await fetch(`http://localhost:3004/todoList/${id}`, {
         method: 'DELETE',
       });
@@ -120,22 +141,37 @@ export class Todo extends Component {
             ...todoList.slice(0, index),
             ...todoList.slice(index + 1),
           ],
+          isLoading: false,
         };
       });
     } catch (error) {
-      console.log(error);
+      this.setState({
+        hasError: error,
+        isLoading: false,
+      });
     }
   };
 
-  // handleFilter = filterType => {
-  //   this.setState({ filterType });
-  // };
-
   render() {
-    const { todoList } = this.state;
+    const { todoList, filterType, isLoading, hasError } =
+      this.state;
+
+    if (hasError) {
+      return (
+        <h1>
+          Something Went wrong please try after sometime
+        </h1>
+      );
+    }
+
     return (
       <div className="container">
         <h1>Todo App</h1>
+        {isLoading && (
+          <div className="loader-wrapper">
+            <div className="loader">Loading...</div>
+          </div>
+        )}
         <TodoForm
           handleAddTodo={this.handleAddTodo}
           ref={this.todoText}
@@ -145,7 +181,10 @@ export class Todo extends Component {
           toggleComplete={this.toggleComplete}
           handleDelete={this.handleDelete}
         />
-        <TodoFilter handleFilter={this.loadTodo} />
+        <TodoFilter
+          handleFilter={this.loadTodo}
+          filterType={filterType}
+        />
       </div>
     );
   }
