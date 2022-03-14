@@ -74,6 +74,11 @@
       "text": "new record 2",
       "isComplete": false,
       "id": 16
+    },
+    {
+      "text": "new record 3",
+      "isComplete": false,
+      "id": 17
     }
   ]
 }

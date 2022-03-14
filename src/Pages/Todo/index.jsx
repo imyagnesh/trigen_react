@@ -1,56 +1,53 @@
-import React, { PureComponent, createRef } from 'react';
+import React, {
+  PureComponent,
+  createRef,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
+import Child1 from './Child1';
 import './style.css';
 import TodoFilter from './todoFilter';
 import TodoForm from './todoForm';
 import TodoList from './todoList';
 
-export class Todo extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      todoList: [],
-      isLoading: false,
-      filterType: 'all',
-      hasError: false,
-    };
-    this.todoText = createRef();
-  }
+// manage State
+// lifecycle methods
+// data manipulation
 
-  async componentDidMount() {
-    this.loadTodo('all');
-  }
+// > 16.8
+// Hooks
+// Hooks is used to manage data in function componennt
 
-  loadTodo = async filterType => {
-    try {
-      this.setState({ isLoading: true });
-      let url =
-        'http://localhost:3004/todoList?_sort=id&_order=desc';
-      if (
-        filterType === undefined ||
-        filterType !== 'all'
-      ) {
-        url = `${url}&isComplete=${
-          filterType === 'completed'
-        }`;
+const Todo = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [todoList, setTodoList] = useState([]);
+  const [hasError, setHasError] = useState(null);
+  const [filterType, setFilterType] = useState('all');
+  const inputRef = useRef();
+
+  // component Did Mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          'http://localhost:3004/todoList?_sort=id&_order=desc',
+        );
+        const json = await res.json();
+        setTodoList(json);
+        setIsLoading(false);
+      } catch (error) {
+        setHasError(error);
+        setIsLoading(false);
       }
-      const res = await fetch(url);
-      const json = await res.json();
-      this.setState({
-        todoList: json,
-        filterType,
-        isLoading: false,
-      });
-    } catch (error) {
-      this.setState({
-        hasError: error,
-        isLoading: false,
-      });
-    }
-  };
+    };
+    loadData();
+  }, []);
 
-  handleAddTodo = async event => {
+  const handleAddTodo = async event => {
     try {
-      this.setState({ isLoading: true });
+      setIsLoading(true);
       event.preventDefault();
 
       const res = await fetch(
@@ -58,7 +55,7 @@ export class Todo extends PureComponent {
         {
           method: 'POST',
           body: JSON.stringify({
-            text: this.todoText.current.value,
+            text: inputRef.current.value,
             isComplete: false,
           }),
           headers: {
@@ -69,125 +66,224 @@ export class Todo extends PureComponent {
       );
 
       const json = await res.json();
-
-      this.setState(
-        ({ todoList }) => ({
-          todoList: [json, ...todoList],
-          isLoading: false,
-        }),
-        () => {
-          this.todoText.current.value = '';
-        },
-      );
+      setTodoList(prevState => [json, ...prevState]);
+      setIsLoading(false);
     } catch (error) {
-      this.setState({
-        hasError: error,
-        isLoading: false,
-      });
+      setHasError(error);
+      setIsLoading(false);
     }
   };
 
-  toggleComplete = async item => {
-    try {
-      this.setState({ isLoading: true });
-      const res = await fetch(
-        `http://localhost:3004/todoList/${item.id}`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({
-            ...item,
-            isComplete: !item.isComplete,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-      );
+  const toggleComplete = () => {};
 
-      const json = await res.json();
+  const handleDelete = () => {};
 
-      this.setState(({ todoList }) => {
-        const index = todoList.findIndex(
-          x => x.id === item.id,
-        );
-        return {
-          todoList: [
-            ...todoList.slice(0, index),
-            json,
-            ...todoList.slice(index + 1),
-          ],
-          isLoading: false,
-        };
-      });
-    } catch (error) {
-      this.setState({
-        hasError: error,
-        isLoading: false,
-      });
-    }
-  };
+  const handleFilter = () => {};
 
-  handleDelete = async id => {
-    try {
-      this.setState({ isLoading: true });
-      await fetch(`http://localhost:3004/todoList/${id}`, {
-        method: 'DELETE',
-      });
-      this.setState(({ todoList }) => {
-        const index = todoList.findIndex(x => x.id === id);
-        return {
-          todoList: [
-            ...todoList.slice(0, index),
-            ...todoList.slice(index + 1),
-          ],
-          isLoading: false,
-        };
-      });
-    } catch (error) {
-      this.setState({
-        hasError: error,
-        isLoading: false,
-      });
-    }
-  };
+  return (
+    <div className="container">
+      <h1>Todo App</h1>
+      <TodoForm
+        ref={inputRef}
+        handleAddTodo={handleAddTodo}
+      />
+      <TodoList
+        todoList={todoList}
+        toggleComplete={toggleComplete}
+        handleDelete={handleDelete}
+      />
+      <TodoFilter
+        handleFilter={handleFilter}
+        filterType={filterType}
+      />
+    </div>
+  );
+};
 
-  render() {
-    const { todoList, filterType, isLoading, hasError } =
-      this.state;
+// export class Todo extends PureComponent {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       todoList: [],
+//       isLoading: false,
+//       filterType: 'all',
+//       hasError: false,
+//     };
+//     this.todoText = createRef();
+//   }
 
-    if (hasError) {
-      return (
-        <h1>
-          Something Went wrong please try after sometime
-        </h1>
-      );
-    }
+//   async componentDidMount() {
+//     this.loadTodo('all');
+//   }
 
-    return (
-      <div className="container">
-        <h1>Todo App</h1>
-        {isLoading && (
-          <div className="loader-wrapper">
-            <div className="loader">Loading...</div>
-          </div>
-        )}
-        <TodoForm
-          handleAddTodo={this.handleAddTodo}
-          ref={this.todoText}
-        />
-        <TodoList
-          todoList={todoList}
-          toggleComplete={this.toggleComplete}
-          handleDelete={this.handleDelete}
-        />
-        <TodoFilter
-          handleFilter={this.loadTodo}
-          filterType={filterType}
-        />
-      </div>
-    );
-  }
-}
+//   loadTodo = async filterType => {
+//     try {
+//       this.setState({ isLoading: true });
+//       let url =
+//         'http://localhost:3004/todoList?_sort=id&_order=desc';
+//       if (
+//         filterType === undefined ||
+//         filterType !== 'all'
+//       ) {
+//         url = `${url}&isComplete=${
+//           filterType === 'completed'
+//         }`;
+//       }
+//       const res = await fetch(url);
+//       const json = await res.json();
+//       this.setState({
+//         todoList: json,
+//         filterType,
+//         isLoading: false,
+//       });
+//     } catch (error) {
+//       this.setState({
+//         hasError: error,
+//         isLoading: false,
+//       });
+//     }
+//   };
+
+//   handleAddTodo = async event => {
+//     try {
+//       this.setState({ isLoading: true });
+//       event.preventDefault();
+
+//       const res = await fetch(
+//         'http://localhost:3004/todoList',
+//         {
+//           method: 'POST',
+//           body: JSON.stringify({
+//             text: this.todoText.current.value,
+//             isComplete: false,
+//           }),
+//           headers: {
+//             'Content-Type': 'application/json',
+//             Accept: 'application/json',
+//           },
+//         },
+//       );
+
+//       const json = await res.json();
+
+//       this.setState(
+//         ({ todoList }) => ({
+//           todoList: [json, ...todoList],
+//           isLoading: false,
+//         }),
+//         () => {
+//           this.todoText.current.value = '';
+//         },
+//       );
+//     } catch (error) {
+//       this.setState({
+//         hasError: error,
+//         isLoading: false,
+//       });
+//     }
+//   };
+
+//   toggleComplete = async item => {
+//     try {
+//       this.setState({ isLoading: true });
+//       const res = await fetch(
+//         `http://localhost:3004/todoList/${item.id}`,
+//         {
+//           method: 'PUT',
+//           body: JSON.stringify({
+//             ...item,
+//             isComplete: !item.isComplete,
+//           }),
+//           headers: {
+//             'Content-Type': 'application/json',
+//             Accept: 'application/json',
+//           },
+//         },
+//       );
+
+//       const json = await res.json();
+
+//       this.setState(({ todoList }) => {
+//         const index = todoList.findIndex(
+//           x => x.id === item.id,
+//         );
+//         return {
+//           todoList: [
+//             ...todoList.slice(0, index),
+//             json,
+//             ...todoList.slice(index + 1),
+//           ],
+//           isLoading: false,
+//         };
+//       });
+//     } catch (error) {
+//       this.setState({
+//         hasError: error,
+//         isLoading: false,
+//       });
+//     }
+//   };
+
+//   handleDelete = async id => {
+//     try {
+//       this.setState({ isLoading: true });
+//       await fetch(`http://localhost:3004/todoList/${id}`, {
+//         method: 'DELETE',
+//       });
+//       this.setState(({ todoList }) => {
+//         const index = todoList.findIndex(x => x.id === id);
+//         return {
+//           todoList: [
+//             ...todoList.slice(0, index),
+//             ...todoList.slice(index + 1),
+//           ],
+//           isLoading: false,
+//         };
+//       });
+//     } catch (error) {
+//       this.setState({
+//         hasError: error,
+//         isLoading: false,
+//       });
+//     }
+//   };
+
+//   render() {
+//     const { todoList, filterType, isLoading, hasError } =
+//       this.state;
+
+//     if (hasError) {
+//       return (
+//         <h1>
+//           Something Went wrong please try after sometime
+//         </h1>
+//       );
+//     }
+
+//     return (
+//       <div className="container">
+//         <h1>Todo App</h1>
+//         {isLoading && (
+//           <div className="loader-wrapper">
+//             <div className="loader">Loading...</div>
+//           </div>
+//         )}
+//         <TodoForm
+//           handleAddTodo={this.handleAddTodo}
+//           ref={this.todoText}
+//         />
+//         <TodoList
+//           todoList={todoList}
+//           toggleComplete={this.toggleComplete}
+//           handleDelete={this.handleDelete}
+//         />
+//         <TodoFilter
+//           handleFilter={this.loadTodo}
+//           filterType={filterType}
+//         />
+//       </div>
+//     );
+//   }
+// }
 
 export default Todo;
