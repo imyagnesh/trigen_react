@@ -4,32 +4,20 @@ import TodoItem from './todoItem';
 
 const TodoList = ({
   todoList,
-  filterType,
   toggleComplete,
   handleDelete,
 }) => {
   console.log('todo list');
   return (
     <div className="todoList-wrapper">
-      {todoList
-        .filter(x => {
-          switch (filterType) {
-            case 'completed':
-              return x.isComplete;
-            case 'pending':
-              return !x.isComplete;
-            default:
-              return true;
-          }
-        })
-        .map(item => (
-          <TodoItem
-            key={item.id}
-            item={item}
-            toggleComplete={toggleComplete}
-            handleDelete={handleDelete}
-          />
-        ))}
+      {todoList.map(item => (
+        <TodoItem
+          key={item.id}
+          item={item}
+          toggleComplete={toggleComplete}
+          handleDelete={handleDelete}
+        />
+      ))}
     </div>
   );
 };
@@ -42,11 +30,6 @@ TodoList.propTypes = {
       isComplete: PropTypes.bool.isRequired,
     }),
   ).isRequired,
-  filterType: PropTypes.oneOf([
-    'all',
-    'pending',
-    'completed',
-  ]).isRequired,
   toggleComplete: PropTypes.func.isRequired,
   handleDelete: PropTypes.func.isRequired,
 };

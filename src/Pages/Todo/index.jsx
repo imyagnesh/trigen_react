@@ -15,18 +15,30 @@ export class Todo extends Component {
   }
 
   async componentDidMount() {
+    this.loadTodo();
+  }
+
+  loadTodo = async filterType => {
     try {
-      const res = await fetch(
-        'http://localhost:3004/todoList',
-      );
+      let url = 'http://localhost:3004/todoList';
+      if (
+        filterType === undefined ||
+        filterType !== 'all'
+      ) {
+        url = `${url}?isComplete=${
+          filterType === 'completed'
+        }`;
+      }
+      const res = await fetch(url);
       const json = await res.json();
       this.setState({
         todoList: json,
+        filterType,
       });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   handleAddTodo = async event => {
     try {
@@ -115,12 +127,12 @@ export class Todo extends Component {
     }
   };
 
-  handleFilter = filterType => {
-    this.setState({ filterType });
-  };
+  // handleFilter = filterType => {
+  //   this.setState({ filterType });
+  // };
 
   render() {
-    const { todoList, filterType } = this.state;
+    const { todoList } = this.state;
     return (
       <div className="container">
         <h1>Todo App</h1>
@@ -130,11 +142,10 @@ export class Todo extends Component {
         />
         <TodoList
           todoList={todoList}
-          filterType={filterType}
           toggleComplete={this.toggleComplete}
           handleDelete={this.handleDelete}
         />
-        <TodoFilter handleFilter={this.handleFilter} />
+        <TodoFilter handleFilter={this.loadTodo} />
       </div>
     );
   }
