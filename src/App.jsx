@@ -1,6 +1,5 @@
 import React from 'react';
-import Todo from './Pages/Todo';
 
-const App = () => <Todo />;
+const App = () => <div>App</div>;
 
 export default App;
