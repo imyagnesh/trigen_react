@@ -1,29 +1,9 @@
 {
   "todoList": [
     {
-      "text": "learn react",
+      "text": "hello",
       "isComplete": false,
-      "id": 2
-    },
-    {
-      "text": "zdfasdf",
-      "isComplete": true,
-      "id": 4
-    },
-    {
-      "text": "dsfasdf",
-      "isComplete": true,
-      "id": 8
-    },
-    {
-      "text": "new record",
-      "isComplete": true,
-      "id": 9
-    },
-    {
-      "text": "new record 1",
-      "isComplete": true,
-      "id": 10
+      "id": 1
     }
   ]
 }

@@ -1,14 +1,9 @@
 import React, {
-  useReducer,
   useEffect,
   useRef,
-  useCallback,
   // useMemo,
 } from 'react';
-import {
-  todoAppInitialValues,
-  todoAppReducer,
-} from '../../reducers/todoReducers';
+import useTodo from '../../hooks/useTodo';
 import './style.css';
 import TodoFilter from './todoFilter';
 import TodoForm from './todoForm';
@@ -23,122 +18,22 @@ import TodoList from './todoList';
 // Hooks is used to manage data in function componennt
 
 const Todo = () => {
-  const [
-    { isLoading, todoList, hasError, filterType },
-    dispatch,
-  ] = useReducer(todoAppReducer, todoAppInitialValues);
   const inputRef = useRef();
+  const {
+    toggleComplete,
+    handleAddTodo,
+    handleDelete,
+    loadData,
+    state: { hasError, isLoading, todoList, filterType },
+  } = useTodo(inputRef);
 
-  const loadData = useCallback(async ft => {
-    try {
-      dispatch({ type: 'LOAD_TODO_REQUEST' });
-      let url =
-        'http://localhost:3004/todoList?_sort=id&_order=desc';
-      if (ft !== 'all') {
-        url = `${url}&isComplete=${ft === 'completed'}`;
-      }
-      const res = await fetch(url);
-      const json = await res.json();
-      dispatch({
-        type: 'LOAD_TODO_SUCCESS',
-        payload: {
-          todoList: json,
-          filterType: ft,
-        },
-      });
-    } catch (error) {
-      dispatch({
-        type: 'LOAD_TODO_FAIL',
-        payload: error,
-      });
-    }
-  }, []);
-
-  const handleAddTodo = useCallback(async event => {
-    try {
-      dispatch({ type: 'ADD_TODO_REQUEST' });
-      event.preventDefault();
-      const res = await fetch(
-        'http://localhost:3004/todoList',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            text: inputRef.current.value,
-            isComplete: false,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-      );
-      const json = await res.json();
-      dispatch({ type: 'ADD_TODO_SUCCESS', payload: json });
-    } catch (error) {
-      dispatch({
-        type: 'ADD_TODO_FAIL',
-        payload: error,
-      });
-    }
-  }, []);
-
-  const toggleComplete = useCallback(async item => {
-    try {
-      dispatch({ type: 'UPDATE_TODO_REQUEST' });
-      const res = await fetch(
-        `http://localhost:3004/todoList/${item.id}`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({
-            ...item,
-            isComplete: !item.isComplete,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-      );
-      const json = await res.json();
-      dispatch({
-        type: 'UPDATE_TODO_SUCCESS',
-        payload: json,
-      });
-    } catch (error) {
-      dispatch({
-        type: 'UPDATE_TODO_FAIL',
-        payload: error,
-      });
-    }
-  }, []);
-
-  const handleDelete = useCallback(async id => {
-    try {
-      dispatch({ type: 'DELETE_TODO_REQUEST' });
-      await fetch(`http://localhost:3004/todoList/${id}`, {
-        method: 'DELETE',
-      });
-      dispatch({
-        type: 'DELETE_TODO_SUCCESS',
-        payload: id,
-      });
-    } catch (error) {
-      dispatch({
-        type: 'DELETE_TODO_FAIL',
-        payload: error,
-      });
-    }
-  }, []);
-
-  // non-premitive type of data
-  // const title = useMemo(() => ({ name: 'yagnesh' }), []);
+  console.log('todoList', todoList);
+  console.log('isLoading', isLoading);
 
   // component Did Mount
   useEffect(() => {
     loadData('all');
   }, []);
-
-  console.log('Todo App render');
 
   if (hasError) {
     return <h1>{hasError.message}</h1>;
