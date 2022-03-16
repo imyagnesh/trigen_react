@@ -18,6 +18,8 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'react/function-component-definition': 0,
+    'react/jsx-props-no-spreading': 0,
     'import/no-named-as-default': 0,
+    'jsx-a11y/label-has-associated-control': 0,
   },
 };
