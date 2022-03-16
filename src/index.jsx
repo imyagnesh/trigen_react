@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import { AuthProvider } from './context/authContext';
 import { LocaleProvider } from './context/localeContext';
 import './style.css';
 
 ReactDOM.render(
-  <LocaleProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </LocaleProvider>,
+  <AuthProvider>
+    <LocaleProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </LocaleProvider>
+  </AuthProvider>,
   document.getElementById('root'),
 );

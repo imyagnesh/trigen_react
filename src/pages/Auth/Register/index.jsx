@@ -17,9 +17,20 @@ const Register = () => (
           name="name"
           type="text"
           autoComplete="name"
-          required
           className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Name"
+        />
+      </div>
+      <div>
+        <label htmlFor="age" className="sr-only">
+          Name
+        </label>
+        <input
+          id="age"
+          name="age"
+          type="number"
+          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+          placeholder="Age"
         />
       </div>
       <div>
@@ -31,7 +42,6 @@ const Register = () => (
           name="email"
           type="email"
           autoComplete="email"
-          required
           className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Email address"
         />
@@ -45,7 +55,6 @@ const Register = () => (
           name="password"
           type="password"
           autoComplete="new-password"
-          required
           className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           placeholder="Password"
         />

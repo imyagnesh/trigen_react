@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 
 const Input = ({
-  field: { name, ...field },
+  field: { name, onChange, ...field },
   form: { touched, errors },
   id,
   placeholder,
@@ -26,6 +26,11 @@ const Input = ({
           'rounded-b-md': !!isLast,
         },
       )}
+      onChange={event => {
+        if (name === 'xyz') {
+        }
+        onChange(event);
+      }}
       name={name}
       {...field}
       {...props}
