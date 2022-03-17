@@ -3,28 +3,37 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import Product from '../../../components/Product';
 import axiosInstance from '../../../utils/axiosInstance';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  const loadProducts = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
-      const res = await axiosInstance.get('660/products');
-      setProducts(res.data);
+      const res = await Promise.all([
+        axiosInstance.get('660/products'),
+        axiosInstance.get('660/cart'),
+      ]);
+      setProducts(res[0].data);
+      setCart(res[1].data);
     } catch (error) {
       console.log(error);
     }
   }, []);
 
+  console.log(products);
+  console.log(cart);
+
   useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+    loadData();
+  }, [loadData]);
 
   return (
     <div>
       {products.map(product => (
-        <div key={product.id}>{product.title}</div>
+        <Product key={product.id} product={product} />
       ))}
     </div>
   );
