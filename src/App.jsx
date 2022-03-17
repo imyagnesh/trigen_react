@@ -10,6 +10,7 @@ import Home from './pages/Main/Home';
 
 const App = () => (
   <Routes>
+    {/* Layout Route */}
     <Route
       path="/"
       element={
@@ -17,10 +18,13 @@ const App = () => (
           <Main />
         </ThemeProvider>
       }>
+      {/* Child Routes */}
       <Route index element={<Home />} />
       <Route path="cart" element={<Cart />} />
     </Route>
+    {/* Layout Route */}
     <Route path="/auth" element={<Auth />}>
+      {/* Children */}
       <Route index element={<Login />} />
       <Route path="register" element={<Register />} />
     </Route>

@@ -1,9 +1,13 @@
 import classNames from 'classnames';
 import React from 'react';
+import RDatePicker from 'react-datepicker';
+import { format, parse } from 'date-fns';
 
-const Input = ({
-  field: { name, onChange, ...field },
-  form: { touched, errors },
+import 'react-datepicker/dist/react-datepicker.css';
+
+const DatePicker = ({
+  field: { name, value, onBlur },
+  form: { touched, errors, setFieldValue },
   id,
   placeholder,
   isFirst,
@@ -14,7 +18,7 @@ const Input = ({
     <label htmlFor={id} className="sr-only">
       {placeholder}
     </label>
-    <input
+    <RDatePicker
       id={id}
       placeholder={placeholder}
       className={classNames(
@@ -26,11 +30,16 @@ const Input = ({
           'rounded-b-md': !!isLast,
         },
       )}
-      onChange={event => {
-        onChange(event);
+      onChange={date => {
+        setFieldValue(name, format(date, 'dd/MM/yy'));
       }}
+      onBlur={onBlur}
       name={name}
-      {...field}
+      selected={
+        value
+          ? parse(value, 'dd/MM/yy', new Date())
+          : new Date()
+      }
       {...props}
     />
     {errors[name] && touched[name] && (
@@ -41,4 +50,4 @@ const Input = ({
   </div>
 );
 
-export default Input;
+export default DatePicker;

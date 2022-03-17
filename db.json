@@ -9,9 +9,9 @@
   "users": [
     {
       "email": "yagnesh.modh@gmail.com",
-      "password": "$2a$10$XM1BKlSiaZZG7SCc9cfG0uSch2IHerYiYGtDObhXHIiI445uiOse2",
+      "password": "$2a$10$uYRMCkYzLr.z4Bz/1OqfDODOeY2OUBzYdYv9cVzgn9jhLOQCmKQ8S",
       "name": "Yagnesh Modh",
-      "age": 33,
+      "birthDate": "13/03/22",
       "id": 1
     }
   ]

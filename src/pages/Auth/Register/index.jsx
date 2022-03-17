@@ -1,90 +1,98 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import CustomForm from '../../../components/CustomForm';
+import DatePicker from '../../../components/DatePicker';
+import Input from '../../../components/input';
+import { AuthContext } from '../../../context/authContext';
 
-const Register = () => (
-  <form className="mt-8 space-y-6" action="#" method="POST">
-    <input
-      type="hidden"
-      name="remember"
-      defaultValue="true"
+const fields = [
+  {
+    id: 'txtName',
+    name: 'name',
+    component: Input,
+    placeholder: 'Name',
+    autoComplete: 'name',
+    type: 'text',
+    isFirst: true,
+    validate: value => {
+      if (!value) {
+        return 'required...';
+      }
+      return '';
+    },
+  },
+  {
+    id: 'birth-date',
+    name: 'birthDate',
+    component: DatePicker,
+    placeholder: 'Birth Date',
+    validate: value => {
+      if (!value) {
+        return 'required...';
+      }
+      return '';
+    },
+  },
+  {
+    name: 'email',
+    component: Input,
+    placeholder: 'Email Address',
+    autoComplete: 'email',
+    id: 'email-address',
+    type: 'email',
+    validate: value => {
+      if (!value) {
+        return 'required...';
+      }
+      return '';
+    },
+  },
+  {
+    name: 'password',
+    component: Input,
+    placeholder: 'Password',
+    type: 'password',
+    autoComplete: 'new-password',
+    id: 'txtPassword',
+    validate: value => {
+      if (!value) {
+        return 'required...';
+      }
+      return '';
+    },
+  },
+  {
+    name: 'confirmPassword',
+    component: Input,
+    placeholder: 'Confirm Password',
+    type: 'password',
+    autoComplete: 'new-password',
+    id: 'txtConfirmPassword',
+    validate: value => {
+      if (!value) {
+        return 'required...';
+      }
+      return '';
+    },
+    isLast: true,
+  },
+];
+
+const Register = () => {
+  const { register } = useContext(AuthContext);
+  return (
+    <CustomForm
+      initialValues={{
+        name: '',
+        birthDate: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      }}
+      onSubmit={register}
+      fields={fields}
+      btnTitle="Sign up"
     />
-    <div className="rounded-md shadow-sm -space-y-px">
-      <div>
-        <label htmlFor="name" className="sr-only">
-          Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          autoComplete="name"
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          placeholder="Name"
-        />
-      </div>
-      <div>
-        <label htmlFor="age" className="sr-only">
-          Name
-        </label>
-        <input
-          id="age"
-          name="age"
-          type="number"
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          placeholder="Age"
-        />
-      </div>
-      <div>
-        <label htmlFor="email-address" className="sr-only">
-          Email address
-        </label>
-        <input
-          id="email-address"
-          name="email"
-          type="email"
-          autoComplete="email"
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          placeholder="Email address"
-        />
-      </div>
-      <div>
-        <label htmlFor="password" className="sr-only">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="new-password"
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          placeholder="Password"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="confirm-password"
-          className="sr-only">
-          Confirm Password
-        </label>
-        <input
-          id="confirm-password"
-          name="confirmPassword"
-          type="password"
-          autoComplete="new-password"
-          required
-          className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-          placeholder="Confirm Password"
-        />
-      </div>
-    </div>
-
-    <div>
-      <button
-        type="submit"
-        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        Sign up
-      </button>
-    </div>
-  </form>
-);
+  );
+};
 
 export default Register;
