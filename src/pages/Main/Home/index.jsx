@@ -1,75 +1,22 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useEffect, useContext } from 'react';
 import Product from '../../../components/Product';
-import axiosInstance from '../../../utils/axiosInstance';
+import { CartContext } from '../../../context/cartContext';
+import { ProductsContext } from '../../../context/productsContext';
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
-
-  const loadData = useCallback(async () => {
-    try {
-      const res = await Promise.all([
-        axiosInstance.get('660/products'),
-        axiosInstance.get('660/cart'),
-      ]);
-      setProducts(res[0].data);
-      setCart(res[1].data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  const addToCart = useCallback(async product => {
-    try {
-      const res = await axiosInstance.post('cart', {
-        quantity: 1,
-        productId: product.id,
-      });
-      setCart(prevVal => [...prevVal, res.data]);
-    } catch (error) {}
-  }, []);
-
-  const updateQuantity = useCallback(async cartItem => {
-    try {
-      const res = await axiosInstance.put(
-        `cart/${cartItem.id}`,
-        cartItem,
-      );
-      setCart(prevValue => {
-        const index = prevValue.findIndex(
-          x => x.id === cartItem.id,
-        );
-        return [
-          ...prevValue.slice(0, index),
-          res.data,
-          ...prevValue.slice(index + 1),
-        ];
-      });
-    } catch (error) {}
-  }, []);
-
-  const deleteCartItem = useCallback(async cartItem => {
-    try {
-      await axiosInstance.delete(`cart/${cartItem.id}`);
-      setCart(prevValue => {
-        const index = prevValue.findIndex(
-          x => x.id === cartItem.id,
-        );
-        return [
-          ...prevValue.slice(0, index),
-          ...prevValue.slice(index + 1),
-        ];
-      });
-    } catch (error) {}
-  });
+  const { products, loadProducts } =
+    useContext(ProductsContext);
+  const {
+    cart,
+    loadCart,
+    addToCart,
+    updateQuantity,
+    deleteCartItem,
+  } = useContext(CartContext);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    Promise.all([loadProducts(), loadCart()]);
+  }, [loadProducts, loadCart]);
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from './context/themeContext';
+import { CartProvider } from './context/cartContext';
+import { ProductsProvider } from './context/productsContext';
 import Auth from './pages/Auth';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -14,9 +15,11 @@ const App = () => (
     <Route
       path="/"
       element={
-        <ThemeProvider>
-          <Main />
-        </ThemeProvider>
+        <ProductsProvider>
+          <CartProvider>
+            <Main />
+          </CartProvider>
+        </ProductsProvider>
       }>
       {/* Child Routes */}
       <Route index element={<Home />} />
