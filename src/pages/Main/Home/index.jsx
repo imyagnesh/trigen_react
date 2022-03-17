@@ -1,42 +1,31 @@
-import React from 'react';
-import { LocaleContext } from '../../../context/localeContext';
-import { ThemeContext } from '../../../context/themeContext';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+import axiosInstance from '../../../utils/axiosInstance';
 
 const Home = () => {
-  console.log('Home Page');
+  const [products, setProducts] = useState([]);
+
+  const loadProducts = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get('660/products');
+      setProducts(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
+
   return (
     <div>
-      <h1>Home Page</h1>
-      <LocaleContext.Consumer>
-        {value => {
-          console.log('Consumer Section');
-          return (
-            <>
-              <p>
-                Current Language is{' '}
-                <strong> {value.locale}</strong>
-              </p>
-              <button
-                type="button"
-                onClick={() => value.setLocale('fr')}>
-                Change Language
-              </button>
-            </>
-          );
-        }}
-      </LocaleContext.Consumer>
-      <ThemeContext.Consumer>
-        {({ theme, toggleTheme }) => (
-          <>
-            <p>
-              Current Theme is <strong>{theme}</strong>
-            </p>
-            <button type="button" onClick={toggleTheme}>
-              Change Theme
-            </button>
-          </>
-        )}
-      </ThemeContext.Consumer>
+      {products.map(product => (
+        <div key={product.id}>{product.title}</div>
+      ))}
     </div>
   );
 };

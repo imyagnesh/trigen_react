@@ -1,4 +1,4 @@
-import { Field, Formik } from 'formik';
+import { FastField, Formik } from 'formik';
 import React from 'react';
 
 const CustomForm = ({
@@ -25,7 +25,7 @@ const CustomForm = ({
 
         <div className="rounded-md -space-y-px">
           {fields.map(field => (
-            <Field key={field.name} {...field} />
+            <FastField key={field.name} {...field} />
           ))}
         </div>
         {children}

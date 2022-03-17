@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Formik, Field } from 'formik';
+import { FastField } from 'formik';
 import Input from '../../../components/input';
 import { AuthContext } from '../../../context/authContext';
 import CustomForm from '../../../components/CustomForm';
@@ -66,7 +66,7 @@ const Login = () => {
       fields={fields}
       btnTitle="Sign in">
       <div className="flex items-center justify-between">
-        <Field
+        <FastField
           name="remember_me"
           component={Checkbox}
           id="remember_me"

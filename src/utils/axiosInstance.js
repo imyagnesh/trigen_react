@@ -7,4 +7,16 @@ const axiosInstance = axios.create({
     'Request Timeout. Please try after sometime',
 });
 
+axiosInstance.interceptors.request.use(
+  config => {
+    const token = sessionStorage.getItem('@token');
+    if (token) {
+      const jsonToken = JSON.parse(token);
+      config.headers.Authorization = `Bearer ${jsonToken.accessToken}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error),
+);
+
 export default axiosInstance;
