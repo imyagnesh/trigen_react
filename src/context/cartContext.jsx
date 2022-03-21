@@ -1,50 +1,88 @@
 import React, {
   createContext,
-  useState,
+  useReducer,
   useCallback,
   useMemo,
 } from 'react';
+import {
+  rootReducer,
+  rootReducerInitValue,
+} from '../reducers/rootReducer';
 import axiosInstance from '../utils/axiosInstance';
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [state, dispatch] = useReducer(
+    rootReducer,
+    rootReducerInitValue,
+  );
 
   const loadCart = useCallback(async () => {
     try {
+      dispatch({
+        type: 'LOAD_CART_REQUEST',
+        payload: {
+          message: 'Loading Cart...',
+        },
+      });
       const res = await axiosInstance.get('660/cart');
-      setCart(res.data);
-    } catch (error) {}
+      dispatch({
+        type: 'LOAD_CART_SUCCESS',
+        payload: res.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'LOAD_CART_FAIL',
+        payload: error,
+      });
+    }
   }, []);
 
   const addToCart = useCallback(async product => {
     try {
+      dispatch({
+        type: 'ADD_CART_REQUEST',
+        payload: {
+          message: 'Adding Item To cart...',
+        },
+      });
       const res = await axiosInstance.post('660/cart', {
         quantity: 1,
         productId: product.id,
       });
-      setCart(prevVal => [...prevVal, res.data]);
-    } catch (error) {}
+      dispatch({
+        type: 'ADD_CART_SUCCESS',
+        payload: res.data,
+      });
+    } catch (error) {
+      dispatch({
+        type: 'ADD_CART_FAIL',
+        payload: { error },
+      });
+    }
   }, []);
 
   const updateQuantity = useCallback(async cartItem => {
     try {
+      dispatch({
+        type: 'UPDATE_CART_REQUEST',
+        payload: { message: 'Updating Cart Item' },
+      });
       const res = await axiosInstance.put(
         `660/cart/${cartItem.id}`,
         cartItem,
       );
-      setCart(prevValue => {
-        const index = prevValue.findIndex(
-          x => x.id === cartItem.id,
-        );
-        return [
-          ...prevValue.slice(0, index),
-          res.data,
-          ...prevValue.slice(index + 1),
-        ];
+      dispatch({
+        type: 'UPDATE_CART_SUCCESS',
+        payload: res.data,
       });
-    } catch (error) {}
+    } catch (error) {
+      dispatch({
+        type: 'UPDATE_CART_FAIL',
+        payload: { error },
+      });
+    }
   }, []);
 
   const deleteCartItem = useCallback(async cartItem => {
@@ -64,14 +102,18 @@ export const CartProvider = ({ children }) => {
 
   const value = useMemo(
     () => ({
-      cart,
+      cart: state.cart,
+      loading: state.loading,
+      error: state.error,
       loadCart,
       addToCart,
       updateQuantity,
       deleteCartItem,
     }),
     [
-      cart,
+      state.cart,
+      state.loading,
+      state.error,
       loadCart,
       addToCart,
       updateQuantity,

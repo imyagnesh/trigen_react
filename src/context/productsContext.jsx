@@ -1,27 +1,61 @@
 import React, {
   createContext,
-  useState,
+  useReducer,
   useCallback,
   useMemo,
 } from 'react';
+import {
+  rootReducer,
+  rootReducerInitValue,
+} from '../reducers/rootReducer';
+
 import axiosInstance from '../utils/axiosInstance';
 
 export const ProductsContext = createContext();
 
 export const ProductsProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
+  const [state, dispatch] = useReducer(
+    rootReducer,
+    rootReducerInitValue,
+  );
 
   const loadProducts = useCallback(async () => {
     try {
+      dispatch({
+        type: 'LOAD_PRODUCTS_REQUEST',
+        payload: {
+          message: 'Loading Products...',
+        },
+      });
       const res = await axiosInstance.get('660/products');
-      setProducts(res.data);
-    } catch (error) {}
+      dispatch({
+        type: 'LOAD_PRODUCTS_SUCCESS',
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: 'LOAD_PRODUCTS_FAIL',
+        payload: err,
+      });
+    }
   }, []);
 
   const value = useMemo(
-    () => ({ products, loadProducts }),
-    [products, loadProducts],
+    () => ({
+      products: state.products,
+      loading: state.loading,
+      error: state.error,
+      loadProducts,
+    }),
+    [
+      state.products,
+      state.loading,
+      state.error,
+      loadProducts,
+    ],
   );
+
+  console.log(state);
 
   return (
     <ProductsContext.Provider value={value}>
