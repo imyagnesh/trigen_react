@@ -54,7 +54,7 @@ const Login = () => {
     //   }));
     // };
 
-    // console.log(loginData);
+    // (loginData);
 
     <CustomForm
       initialValues={{

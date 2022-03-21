@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import Alert from '../../components/Alert';
 import CartDialog from '../../components/CartDialog';
+import ErrorAlert from '../../components/ErrorAlert';
 import Header from '../../components/Header';
 import { AuthContext } from '../../context/authContext';
 import { CartContext } from '../../context/cartContext';
@@ -26,6 +28,7 @@ const Main = () => {
         toggleCart={toggleDialog}
       />
       <Outlet />
+      <ErrorAlert />
     </>
   );
 };

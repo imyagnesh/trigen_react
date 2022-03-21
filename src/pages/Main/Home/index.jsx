@@ -23,7 +23,8 @@ const Home = () => {
   } = useContext(CartContext);
 
   useEffect(() => {
-    Promise.all([loadProducts(), loadCart()]);
+    loadProducts();
+    loadCart();
   }, [loadProducts, loadCart]);
 
   const loadProductsLoading = useMemo(

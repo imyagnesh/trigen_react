@@ -32,13 +32,21 @@ export const ProductsProvider = ({ children }) => {
         type: 'LOAD_PRODUCTS_SUCCESS',
         payload: res.data,
       });
-    } catch (err) {
+    } catch (error) {
       dispatch({
         type: 'LOAD_PRODUCTS_FAIL',
-        payload: err,
+        payload: {
+          error,
+          message: 'Load Products Failed',
+          title: 'Load Products',
+        },
       });
     }
   }, []);
+
+  const clearProductsError = payload => {
+    dispatch({ type: 'CLEAR_ERROR', payload });
+  };
 
   const value = useMemo(
     () => ({
@@ -46,16 +54,16 @@ export const ProductsProvider = ({ children }) => {
       loading: state.loading,
       error: state.error,
       loadProducts,
+      clearProductsError,
     }),
     [
       state.products,
       state.loading,
       state.error,
       loadProducts,
+      clearProductsError,
     ],
   );
-
-  console.log(state);
 
   return (
     <ProductsContext.Provider value={value}>

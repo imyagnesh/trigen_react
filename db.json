@@ -266,10 +266,15 @@
   ],
   "cart": [
     {
-      "quantity": 6,
+      "quantity": 7,
       "productId": 1,
       "id": 1,
       "loaderId": 1
+    },
+    {
+      "quantity": 1,
+      "productId": 2,
+      "id": 2
     }
   ]
 }

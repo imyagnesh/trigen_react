@@ -1,4 +1,12 @@
 const errorReducer = (state, { type, payload }) => {
+  if (type === 'CLEAR_ERROR') {
+    return state.filter(
+      x =>
+        x.actionType !== payload.actionType &&
+        x.loaderId !== payload.loaderId,
+    );
+  }
+
   const matches = /(.*)_(REQUEST|FAIL)/.exec(type);
 
   if (!matches) return state;

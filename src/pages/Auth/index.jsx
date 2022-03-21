@@ -5,8 +5,6 @@ import { AuthContext } from '../../context/authContext';
 const Auth = () => {
   const { user } = useContext(AuthContext);
 
-  console.log(user);
-
   if (user) {
     return <Navigate to="/" />;
   }

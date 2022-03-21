@@ -1,5 +1,4 @@
 const loadingReducer = (state, { type, payload }) => {
-  console.log(type, payload);
   const matches = /(.*)_(REQUEST|SUCCESS|FAIL)/.exec(type);
 
   if (!matches) return state;

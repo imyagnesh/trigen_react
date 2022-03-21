@@ -34,7 +34,11 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: 'LOAD_CART_FAIL',
-        payload: { error },
+        payload: {
+          error,
+          message: 'Load Cart Failed',
+          title: 'Load Cart',
+        },
       });
     }
   }, []);
@@ -59,7 +63,12 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: 'ADD_CART_FAIL',
-        payload: { error, loaderId: product.id },
+        payload: {
+          error,
+          loaderId: product.id,
+          message: 'Add Cart Item Failed',
+          title: 'Add Cart',
+        },
       });
     }
   }, []);
@@ -87,7 +96,12 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: 'UPDATE_CART_FAIL',
-        payload: { error, loaderId: cartItem.productId },
+        payload: {
+          error,
+          loaderId: cartItem.productId,
+          message: 'Update Cart Item Failed',
+          title: 'Update Cart',
+        },
       });
     }
   }, []);
@@ -112,12 +126,19 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: 'DELETE_CART_FAIL',
-        payload: { error, loaderId: cartItem.productId },
+        payload: {
+          error,
+          loaderId: cartItem.productId,
+          message: 'Delete Cart Item Failed',
+          title: 'Delete Cart',
+        },
       });
     }
   });
 
-  console.log(state);
+  const clearCartError = payload => {
+    dispatch({ type: 'CLEAR_ERROR', payload });
+  };
 
   const value = useMemo(
     () => ({
@@ -128,6 +149,7 @@ export const CartProvider = ({ children }) => {
       addToCart,
       updateQuantity,
       deleteCartItem,
+      clearCartError,
     }),
     [
       state.cart,
@@ -137,6 +159,7 @@ export const CartProvider = ({ children }) => {
       addToCart,
       updateQuantity,
       deleteCartItem,
+      clearCartError,
     ],
   );
 
