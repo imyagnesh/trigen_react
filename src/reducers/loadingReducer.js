@@ -1,4 +1,5 @@
 const loadingReducer = (state, { type, payload }) => {
+  console.log(type, payload);
   const matches = /(.*)_(REQUEST|SUCCESS|FAIL)/.exec(type);
 
   if (!matches) return state;
@@ -8,7 +9,13 @@ const loadingReducer = (state, { type, payload }) => {
   if (action === 'REQUEST') {
     return [...state, { actionType, ...payload }];
   }
-  return state.filter(x => x.actionType !== actionType);
+  return state.filter(
+    x =>
+      !(
+        x.actionType === actionType &&
+        x.loaderId === payload.loaderId
+      ),
+  );
 };
 
 export default loadingReducer;

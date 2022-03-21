@@ -11,11 +11,11 @@ const Home = () => {
   const {
     products,
     loading: productsLoading,
-    error: productsError,
     loadProducts,
   } = useContext(ProductsContext);
   const {
     cart,
+    loading: cartLoading,
     loadCart,
     addToCart,
     updateQuantity,
@@ -47,6 +47,24 @@ const Home = () => {
         const cartItem = cart.find(
           x => x.productId === product.id,
         );
+        const isAdding = cartLoading.some(
+          x =>
+            x.loaderId === product.id &&
+            x.actionType === 'ADD_CART',
+        );
+
+        const isUpdating = cartLoading.some(
+          x =>
+            x.loaderId === product.id &&
+            x.actionType === 'UPDATE_CART',
+        );
+
+        const isDeleting = cartLoading.some(
+          x =>
+            x.loaderId === product.id &&
+            x.actionType === 'DELETE_CART',
+        );
+
         return (
           <Product
             key={product.id}
@@ -55,6 +73,9 @@ const Home = () => {
             addToCart={addToCart}
             updateQuantity={updateQuantity}
             deleteCartItem={deleteCartItem}
+            isAdding={isAdding}
+            isUpdating={isUpdating}
+            isDeleting={isDeleting}
           />
         );
       })}

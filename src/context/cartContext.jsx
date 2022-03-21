@@ -34,7 +34,7 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: 'LOAD_CART_FAIL',
-        payload: error,
+        payload: { error },
       });
     }
   }, []);
@@ -44,6 +44,7 @@ export const CartProvider = ({ children }) => {
       dispatch({
         type: 'ADD_CART_REQUEST',
         payload: {
+          loaderId: product.id,
           message: 'Adding Item To cart...',
         },
       });
@@ -53,12 +54,12 @@ export const CartProvider = ({ children }) => {
       });
       dispatch({
         type: 'ADD_CART_SUCCESS',
-        payload: res.data,
+        payload: { ...res.data, loaderId: product.id },
       });
     } catch (error) {
       dispatch({
         type: 'ADD_CART_FAIL',
-        payload: { error },
+        payload: { error, loaderId: product.id },
       });
     }
   }, []);
@@ -67,7 +68,10 @@ export const CartProvider = ({ children }) => {
     try {
       dispatch({
         type: 'UPDATE_CART_REQUEST',
-        payload: { message: 'Updating Cart Item' },
+        payload: {
+          message: 'Updating Cart Item',
+          loaderId: cartItem.productId,
+        },
       });
       const res = await axiosInstance.put(
         `660/cart/${cartItem.id}`,
@@ -75,30 +79,45 @@ export const CartProvider = ({ children }) => {
       );
       dispatch({
         type: 'UPDATE_CART_SUCCESS',
-        payload: res.data,
+        payload: {
+          ...res.data,
+          loaderId: cartItem.productId,
+        },
       });
     } catch (error) {
       dispatch({
         type: 'UPDATE_CART_FAIL',
-        payload: { error },
+        payload: { error, loaderId: cartItem.productId },
       });
     }
   }, []);
 
   const deleteCartItem = useCallback(async cartItem => {
     try {
-      await axiosInstance.delete(`660/cart/${cartItem.id}`);
-      setCart(prevValue => {
-        const index = prevValue.findIndex(
-          x => x.id === cartItem.id,
-        );
-        return [
-          ...prevValue.slice(0, index),
-          ...prevValue.slice(index + 1),
-        ];
+      dispatch({
+        type: 'DELETE_CART_REQUEST',
+        payload: {
+          message: 'Delete Cart Item',
+          loaderId: cartItem.productId,
+        },
       });
-    } catch (error) {}
+      await axiosInstance.delete(`660/cart/${cartItem.id}`);
+      dispatch({
+        type: 'DELETE_CART_SUCCESS',
+        payload: {
+          ...cartItem,
+          loaderId: cartItem.productId,
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: 'DELETE_CART_FAIL',
+        payload: { error, loaderId: cartItem.productId },
+      });
+    }
   });
+
+  console.log(state);
 
   const value = useMemo(
     () => ({

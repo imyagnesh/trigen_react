@@ -8,7 +8,11 @@ const errorReducer = (state, { type, payload }) => {
   if (action === 'FAIL') {
     return [...state, { actionType, ...payload }];
   }
-  return state.filter(x => x.actionType !== actionType);
+  return state.filter(
+    x =>
+      x.actionType !== actionType &&
+      x.loaderId !== payload.loaderId,
+  );
 };
 
 export default errorReducer;
