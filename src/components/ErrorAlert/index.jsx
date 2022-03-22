@@ -1,31 +1,16 @@
-import React, { useContext } from 'react';
-import { CartContext } from '../../context/cartContext';
-import { ProductsContext } from '../../context/productsContext';
-import Alert from '../Alert';
+import { connect } from 'react-redux';
+import ErrorAlert from './ErrorAlert';
 
-const ErrorAlert = () => {
-  const { error: cartError, clearCartError } =
-    useContext(CartContext);
-  const { error: productsError, clearProductsError } =
-    useContext(ProductsContext);
+const mapStateToProps = state => ({
+  errors: state.errors,
+});
 
-  return (
-    <>
-      {[...cartError, ...productsError].map((item, i) => (
-        <Alert
-          key={`${item.actionType}_${item.loaderId}`}
-          type="error"
-          title={item.title}
-          description={item.message}
-          index={i}
-          clearError={() => {
-            clearProductsError(item);
-            clearCartError(item);
-          }}
-        />
-      ))}
-    </>
-  );
-};
+const mapDispatchToProps = dispatch => ({
+  clearError: payload =>
+    dispatch({ type: 'CLEAR_ERROR', payload }),
+});
 
-export default ErrorAlert;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ErrorAlert);

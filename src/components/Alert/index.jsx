@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const Alert = ({
   type,
@@ -66,6 +67,14 @@ const Alert = ({
       </div>
     </div>
   );
+};
+
+Alert.propTypes = {
+  type: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  clearError: PropTypes.func.isRequired,
 };
 
 export default Alert;

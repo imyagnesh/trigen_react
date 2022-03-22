@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FastField } from 'formik';
-import Input from '../../../components/input';
+import Input from '../../../components/Input';
 import { AuthContext } from '../../../context/authContext';
 import CustomForm from '../../../components/CustomForm';
 import Checkbox from '../../../components/Checkbox';

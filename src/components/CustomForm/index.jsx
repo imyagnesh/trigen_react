@@ -1,5 +1,6 @@
 import { FastField, Formik } from 'formik';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const CustomForm = ({
   fields,
@@ -41,5 +42,11 @@ const CustomForm = ({
     )}
   </Formik>
 );
+
+CustomForm.propTypes = {
+  children: PropTypes.element.isRequired,
+  btnTitle: PropTypes.string.isRequired,
+  fields: PropTypes.arrayOf().isRequired,
+};
 
 export default CustomForm;

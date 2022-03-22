@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import PropTypes from 'prop-types';
 import axiosInstance from '../utils/axiosInstance';
 
 export const AuthContext = createContext();
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (values, actions) => {
     try {
+      // eslint-disable-next-line camelcase
       const { remember_me, ...rest } = values;
       const res = await axiosInstance.post('login', rest);
       sessionStorage.setItem(
@@ -76,4 +78,8 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.element.isRequired,
 };

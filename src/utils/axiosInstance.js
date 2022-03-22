@@ -9,12 +9,13 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   config => {
+    const { headers } = config;
     const token = sessionStorage.getItem('@token');
     if (token) {
       const jsonToken = JSON.parse(token);
-      config.headers.Authorization = `Bearer ${jsonToken.accessToken}`;
+      headers.Authorization = `Bearer ${jsonToken.accessToken}`;
     }
-    return config;
+    return { ...config, headers };
   },
   error => Promise.reject(error),
 );

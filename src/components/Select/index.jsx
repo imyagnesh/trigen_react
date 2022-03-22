@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Select = ({
   field: { name, onChange, ...field },
@@ -46,5 +47,31 @@ const Select = ({
     )}
   </div>
 );
+
+Select.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  isFirst: PropTypes.bool,
+  isLast: PropTypes.bool,
+  options: PropTypes.arrayOf(
+    PropTypes.exact({
+      value: PropTypes.any,
+      text: PropTypes.string.isRequired,
+    }).isRequired,
+  ).isRequired,
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+  }).isRequired,
+  form: PropTypes.shape({
+    touched: PropTypes.shape({}).isRequired,
+    errors: PropTypes.shape({}).isRequired,
+  }).isRequired,
+};
+
+Select.defaultProps = {
+  isFirst: false,
+  isLast: false,
+};
 
 export default Select;

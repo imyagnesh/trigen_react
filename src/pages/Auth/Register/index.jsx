@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import CustomForm from '../../../components/CustomForm';
 import DatePicker from '../../../components/DatePicker';
-import Input from '../../../components/input';
+import Input from '../../../components/Input';
 import { AuthContext } from '../../../context/authContext';
 
 const fields = [

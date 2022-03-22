@@ -1,7 +1,7 @@
 export const productReducerInitValues = [];
 
 export const productsReducer = (
-  state,
+  state = [],
   { type, payload },
 ) => {
   switch (type) {

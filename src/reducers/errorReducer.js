@@ -1,4 +1,4 @@
-const errorReducer = (state, { type, payload }) => {
+const errorReducer = (state = [], { type, payload }) => {
   if (type === 'CLEAR_ERROR') {
     return state.filter(
       x =>

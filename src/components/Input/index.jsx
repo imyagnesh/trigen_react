@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Input = ({
   field: { name, onChange, ...field },
@@ -40,5 +41,25 @@ const Input = ({
     )}
   </div>
 );
+
+Input.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  isFirst: PropTypes.bool,
+  isLast: PropTypes.bool,
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+  }).isRequired,
+  form: PropTypes.shape({
+    touched: PropTypes.shape({}).isRequired,
+    errors: PropTypes.shape({}).isRequired,
+  }).isRequired,
+};
+
+Input.defaultProps = {
+  isFirst: false,
+  isLast: false,
+};
 
 export default Input;

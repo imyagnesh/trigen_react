@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StarIcon } from '@heroicons/react/solid';
 
 function classNames(...classes) {
@@ -25,12 +26,17 @@ const Rating = ({ rate, count }) => (
       </div>
       <p className="sr-only">{rate} out of 5 stars</p>
       <a
-        href="#"
+        href="#reviews"
         className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
         ({count} reviews)
       </a>
     </div>
   </div>
 );
+
+Rating.propTypes = {
+  rate: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
+};
 
 export default Rating;

@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
+import PropTypes from 'prop-types';
 import {
   rootReducer,
   rootReducerInitValue,
@@ -70,4 +71,8 @@ export const ProductsProvider = ({ children }) => {
       {children}
     </ProductsContext.Provider>
   );
+};
+
+ProductsProvider.propTypes = {
+  children: PropTypes.element.isRequired,
 };

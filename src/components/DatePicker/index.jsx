@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import RDatePicker from 'react-datepicker';
 import { format, parse } from 'date-fns';
+import PropTypes from 'prop-types';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -49,5 +50,27 @@ const DatePicker = ({
     )}
   </div>
 );
+
+DatePicker.propTypes = {
+  placeholder: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  isFirst: PropTypes.bool,
+  isLast: PropTypes.bool,
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    onBlur: PropTypes.func.isRequired,
+    value: PropTypes.string,
+  }).isRequired,
+  form: PropTypes.shape({
+    touched: PropTypes.shape({}).isRequired,
+    errors: PropTypes.shape({}).isRequired,
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+DatePicker.defaultProps = {
+  isFirst: false,
+  isLast: false,
+};
 
 export default DatePicker;
