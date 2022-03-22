@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { loadCartAction } from '../../../actions/cartAction';
-import { loadProductsAction } from '../../../actions/productsAction';
+import { loadCartRequest } from '../../../actions/cartAction';
+import { loadProductsRequest } from '../../../actions/productsAction';
 import Home from './Home';
 
 const mapStateToProps = state => ({
@@ -11,8 +11,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadProducts: () => loadProductsAction()(dispatch),
-  loadCart: () => loadCartAction()(dispatch),
+  loadProducts: () => dispatch(loadProductsRequest()),
+  loadCart: () => dispatch(loadCartRequest()),
 });
 
 export default connect(

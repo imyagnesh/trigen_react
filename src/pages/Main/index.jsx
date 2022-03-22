@@ -1,9 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, {
+  useContext,
+  useState,
+  lazy,
+  Suspense,
+} from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import CartDialog from '../../components/CartDialog';
+// import CartDialog from '../../components/CartDialog';
 import ErrorAlert from '../../components/ErrorAlert';
 import Header from '../../components/Header';
 import { AuthContext } from '../../context/authContext';
+
+const CartDialog = lazy(() =>
+  import('../../components/CartDialog'),
+);
 
 const Main = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -20,10 +29,14 @@ const Main = () => {
   return (
     <>
       <Header toggleDialog={toggleDialog} logout={logout} />
-      <CartDialog
-        open={openDialog}
-        toggleCart={toggleDialog}
-      />
+      <Suspense fallback={<p>Loading...</p>}>
+        {openDialog && (
+          <CartDialog
+            open={openDialog}
+            toggleCart={toggleDialog}
+          />
+        )}
+      </Suspense>
       <Outlet />
       <ErrorAlert />
     </>

@@ -1,6 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Product from '../../../components/Product';
+
+const Product = lazy(() =>
+  import('../../../components/Product'),
+);
+
+// import Product from '../../../components/Product';
 
 const Home = ({
   products,
@@ -8,6 +13,8 @@ const Home = ({
   loadProducts,
   loadCart,
 }) => {
+  console.log('Home Component');
+
   useEffect(() => {
     Promise.all([loadProducts(), loadCart()]);
   }, [loadProducts, loadCart]);
@@ -22,7 +29,11 @@ const Home = ({
         </div>
       )}
       {products.map(product => (
-        <Product key={product.id} product={product} />
+        <Suspense
+          key={product.id}
+          fallback={<p>Loading...</p>}>
+          <Product product={product} />
+        </Suspense>
       ))}
     </div>
   );

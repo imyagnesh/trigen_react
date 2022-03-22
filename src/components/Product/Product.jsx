@@ -19,6 +19,7 @@ const Product = ({
           src={product.image}
           alt={product.title}
           className="object-center object-cover"
+          loading="lazy"
         />
       </div>
       <div className="sm:col-span-8 lg:col-span-9">

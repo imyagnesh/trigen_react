@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import PropTypes from 'prop-types';
-import Alert from '../Alert';
+
+const Alert = lazy(() => import('../Alert'));
+
+// import Alert from '../Alert';
 
 const ErrorAlert = ({ errors, clearError }) => (
   <>
     {errors.map((item, i) => (
-      <Alert
-        key={`${item.actionType}_${item.loaderId}`}
-        type="error"
-        title={item.title}
-        description={item.message}
-        index={i}
-        clearError={clearError}
-      />
+      <Suspense fallback={<p>Loading...</p>}>
+        <Alert
+          key={`${item.actionType}_${item.loaderId}`}
+          type="error"
+          title={item.title}
+          description={item.message}
+          index={i}
+          clearError={clearError}
+        />
+      </Suspense>
     ))}
   </>
 );
